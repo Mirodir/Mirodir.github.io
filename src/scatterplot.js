@@ -1,5 +1,5 @@
 // create svg canvas
-const canvHeight = 600, canvWidth = 800;
+const canvHeight = 700, canvWidth = 1600;
 const svg = d3.select("body").append("svg")
     .attr("width", canvWidth)
     .attr("height", canvHeight)
@@ -18,7 +18,7 @@ svg.append("text")
     .attr("font-family", "sans-serif")
     .attr("font-size", "24px")
     .style("text-anchor", "left")
-    .text("Price vs Length");
+    .text("Review Score vs Game Length");
 
 // create parent group and add left and top margin
 const g = svg.append("g")
@@ -42,7 +42,7 @@ g.append("text")
     .attr("dy", "1em")
     .attr("font-family", "sans-serif")
     .style("text-anchor", "middle")
-    .text("Price in USD cents");
+    .text("Review Rating in %");
 
 function createLegend(legendDomain, colorScale) {
     // 1. create a group to hold the legend
@@ -90,15 +90,14 @@ function createLegend(legendDomain, colorScale) {
 // note: the call is done asynchronous. 
 // That is why you have to load the data inside of a
 // callback function.
-d3.csv("./data/all_steam_games_with_time_data.csv").then(function(data) {
-    const xDomain = d3.extent(data, d => Number(d.main_time));
-    const yDomain = d3.extent(data, d => Number(d.price));
+d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(function(data) {
+    const xDomain = d3.extent(data, d => Number(d.main_50));
+    const yDomain = d3.extent(data, d => Number(d.score));
 
     // 1. create scales for x and y direction and for the color coding
     const xScale = d3.scaleLinear()
         .domain(xDomain)
-        .rangeRound([0, width])
-        .nice(5);
+        .rangeRound([0, width]);
 
     const yScale = d3.scaleLinear()
         .domain(yDomain)
@@ -130,20 +129,20 @@ d3.csv("./data/all_steam_games_with_time_data.csv").then(function(data) {
             // .style("fill", d=> colorScale(d["Shirt Size"]))
             .attr("cx", 0)
             .attr("cy", height)
-            .attr("r", 4)
+            .attr("r", 1)
             .transition()
             //.duration(2000)
             .duration(d => 
                 500 * Math.log10(1000 * Math.sqrt(
-                    Math.pow(0      - xScale(d.main_time), 2) +
-                    Math.pow(height - yScale(d.price), 2)
+                    Math.pow(0      - xScale(d.main_50), 2) +
+                    Math.pow(height - yScale(d.score), 2)
                 ))
             )
             .ease(d3.easeElasticOut)
             .attr("class", "person_data_point")
-            .attr("cx", d=> xScale(d.main_time))
-            .attr("cy", d=> yScale(d.price))
-            .attr("r", 4)
+            .attr("cx", d=> xScale(d.main_50))
+            .attr("cy", d=> yScale(d.score))
+            .attr("r", 2)
         ;
 
     // 4. create legend
@@ -159,9 +158,9 @@ d3.csv("./data/all_steam_games_with_time_data.csv").then(function(data) {
             .style("top", pos[1] - 28 + "px")
             .style("visibility", "visible")
             .html(`Name: ${d.name}<br/>`
-                + `Main Story Time: ${d.main_time}<br/>`
-                + `Price: ${d.price}<br/>`);
-            // + `Hair Color: ${d["Hair Color"]}`);
+            + `Main Story Time: ${Math.round(d.main_time*100)/100}<br/>`
+            + `Score: ${Math.round(d.score*100)/100}<br/>`
+            + `<img alt="game image" src="https://howlongtobeat.com${d.pic_url}" width="150">`);
     })
     .on("mouseout", (event, d) => {
         tooltip.style("visibility", "hidden");
