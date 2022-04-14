@@ -10,6 +10,34 @@ const margin = {top: 50, right: 80, bottom: 50, left: 60};
 const width = canvWidth - margin.left - margin.right;
 const height = canvHeight - margin.top - margin.bottom;
 
+const yData = ["score", "initialprice"]
+const xData = ["main_50", "completion_time_100", "main_extra_time_50"]
+
+
+d3.select("body").append("select")
+    .attr("id", "selectYButton")
+d3.select("body").append("select")
+    .attr("id", "selectXButton")
+
+d3.select("#selectYButton")
+    .selectAll('select')
+    .data(yData)
+    .enter()
+    .append('option')
+    .text(function (d) { return d; }) // text showed in the menu
+    .attr("value", function (d) { return d; })
+
+d3.select("#selectXButton")
+    .selectAll('select')
+    .data(xData)
+    .enter()
+    .append('option')
+    .text(function (d) { return d; }) // text showed in the menu
+    .attr("value", function (d) { return d; })
+
+
+
+
 // chart title
 svg.append("text")
     .attr("y", 0)
@@ -51,9 +79,6 @@ function createLegend(legendDomain, colorScale) {
         .attr("transform", "translate(" + (canvWidth - margin.right + 10) + "," + margin.top + ")")
 
 
-    // 2. create the legend boxes and the text label
-    //   a. use .data(legendDomain) on an empty DOM selection
-    //      store enter()-loop in variable legend_entry
     const legend_entry = legend.selectAll("rect")
         .data(legendDomain)
         .enter();
@@ -86,20 +111,20 @@ function createLegend(legendDomain, colorScale) {
 
 }
 
-// load the data from the cleaned csv file. 
-// note: the call is done asynchronous. 
-// That is why you have to load the data inside of a
-// callback function.
+
+
+
 d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(function(data) {
-    const xDomain = d3.extent(data, d => Number(d.main_50));
-    const yDomain = d3.extent(data, d => Number(d.score));
+    let xDomain = d3.extent(data, d => Number(d.main_50));
+    let yDomain = d3.extent(data, d => Number(d.score));
+    console.log(yDomain);
 
     // 1. create scales for x and y direction and for the color coding
-    const xScale = d3.scaleLinear()
+    let xScale = d3.scaleLinear()
         .domain(xDomain)
         .rangeRound([0, width]);
 
-    const yScale = d3.scaleLinear()
+    let yScale = d3.scaleLinear()
         .domain(yDomain)
         .rangeRound([height, 0])
         .nice(5);
@@ -108,14 +133,14 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 
     // 2. create and append
     //    a. x-axis
-    const xAxis = d3.axisBottom(xScale);
+    let xAxis = d3.axisBottom(xScale);
     g.append("g")
         .attr("id", "x-axis")
         .attr("transform", "translate(0, "+ height +")")
         .call(xAxis);
 
     //    b. y-axis
-    const yAxis = d3.axisLeft(yScale);
+    let yAxis = d3.axisLeft(yScale);
     g.append("g")
         .attr("id", "y-axis")
         .call(yAxis);
@@ -124,25 +149,11 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
     // 3. add data-points (circle)
     var data_points = g.selectAll("circle")
         .data(data)
-        .enter();
-    data_points.append("circle")
-            // .style("fill", d=> colorScale(d["Shirt Size"]))
-            .attr("cx", 0)
-            .attr("cy", height)
-            .attr("r", 1)
-            .transition()
-            //.duration(2000)
-            .duration(d => 
-                500 * Math.log10(1000 * Math.sqrt(
-                    Math.pow(0      - xScale(d.main_50), 2) +
-                    Math.pow(height - yScale(d.score), 2)
-                ))
-            )
-            .ease(d3.easeElasticOut)
-            .attr("class", "person_data_point")
+            .join('circle')  // .style("fill", d=> colorScale(d["Shirt Size"]))
+            .attr("class", "game_data_point")
             .attr("cx", d=> xScale(d.main_50))
             .attr("cy", d=> yScale(d.score))
-            .attr("r", 2)
+            .attr("r", 1.5)
         ;
 
     // 4. create legend
@@ -158,12 +169,75 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
             .style("top", pos[1] - 28 + "px")
             .style("visibility", "visible")
             .html(`Name: ${d.name}<br/>`
-            + `Main Story Time: ${Math.round(d.main_time*100)/100}<br/>`
-            + `Score: ${Math.round(d.score*100)/100}<br/>`
+            + `Main Story Time: ${Math.round(d.main_time*100)/100} hours<br/>`
+            + `Score: ${Math.round(d.score*100)/100}%<br/>`
             + `<img alt="game image" src="https://howlongtobeat.com${d.pic_url}" width="150">`);
     })
     .on("mouseout", (event, d) => {
         tooltip.style("visibility", "hidden");
     });
+
+
+    d3.select("#selectYButton").on("change", function(event,d) {
+        const selectedOption = d3.select(this).property("value")
+        switchYAxis(selectedOption)
+    })
+
+    d3.select("#selectXButton").on("change", function(event,d) {
+        const selectedOption = d3.select(this).property("value")
+        switchXAxis(selectedOption)
+    })
+
+
+
+    function switchYAxis(selectedGroup) {
+
+        console.log(data)
+        yDomain = d3.extent(data, d => Number(d[selectedGroup]));
+        console.log(yDomain)
+        yScale = d3.scaleLinear()
+            .domain(yDomain)
+            .rangeRound([height, 0])
+            .nice(5);
+
+        yAxis = d3.axisLeft(yScale);
+        // g.remove("y-axis")
+        g.append("g")
+            .attr("id", "y-axis")
+            .call(yAxis);
+
+
+        data_points
+            .data(data)
+            .transition()
+            .duration(1000)
+            .attr("cy", d=> yScale(d[selectedGroup]));
+
+    }
+
+    function switchXAxis(selectedGroup) {
+
+
+        xDomain = d3.extent(data, d => Number(d[selectedGroup]));
+        xScale = d3.scaleLinear()
+            .domain(xDomain)
+            .rangeRound([0, width])
+
+        xAxis = d3.axisBottom(xScale);
+        g.append("g")
+            .attr("id", "x-axis")
+            .attr("transform", "translate(0, "+ height +")")
+            .call(xAxis);
+
+
+        data_points
+            .data(data)
+            .transition()
+            .duration(1000)
+            .attr("cx", d=> xScale(d[selectedGroup]));
+
+    }
+
+
 });
 
