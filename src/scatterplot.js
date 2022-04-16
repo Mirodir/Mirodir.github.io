@@ -5,7 +5,6 @@ const svg = d3.select("body").append("svg")
     .attr("height", canvHeight)
     .style("border", "1px solid");
 
-// calc the width and height depending on margins.
 const margin = {top: 50, right: 80, bottom: 50, left: 60};
 const width = canvWidth - margin.left - margin.right;
 const height = canvHeight - margin.top - margin.bottom;
@@ -38,7 +37,6 @@ d3.select("#selectXButton")
 
 
 
-// chart title
 svg.append("text")
     .attr("y", 0)
     .attr("x", margin.left)
@@ -48,12 +46,10 @@ svg.append("text")
     .style("text-anchor", "left")
     .text("Review Score vs Game Length");
 
-// create parent group and add left and top margin
 const g = svg.append("g")
     .attr("id", "chart-area")
     .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
 
-// text label for the x axis
 g.append("text")
     .attr("y", height + margin.bottom / 2)
     .attr("x", width / 2)
@@ -62,7 +58,6 @@ g.append("text")
     .style("text-anchor", "middle")
     .text("Time to beat in hours");
 
- // text label for the y axis
 g.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)
@@ -73,7 +68,6 @@ g.append("text")
     .text("Review Rating in %");
 
 function createLegend(legendDomain, colorScale) {
-    // 1. create a group to hold the legend
     const legend = svg.append("g")
         .attr("id", "legend")
         .attr("transform", "translate(" + (canvWidth - margin.right + 10) + "," + margin.top + ")")
@@ -83,7 +77,6 @@ function createLegend(legendDomain, colorScale) {
         .data(legendDomain)
         .enter();
 
-    //   b. add coloured rect to legend_entry
     legend_entry.append("rect")
         .attr("x", 10)
         .attr("y", (d,i) => 30 * i + 10)
@@ -93,13 +86,11 @@ function createLegend(legendDomain, colorScale) {
         .attr("stroke", "black")
         .attr("stroke-width", "1");
 
-    //   c. add text label to legend_entry
     legend_entry.append("text")
         .attr("x", 40)
         .attr("y", (d,i) => 30 * i + 25)
         .text(d => d);
 
-    // 3. create the main border of the legend
     legend.append("rect")
         .attr("x", 1)
         .attr("y", 1)
@@ -110,8 +101,6 @@ function createLegend(legendDomain, colorScale) {
         .attr("stroke-width", "1");
 
 }
-
-
 
 
 d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(function(data) {
@@ -131,15 +120,12 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    // 2. create and append
-    //    a. x-axis
     let xAxis = d3.axisBottom(xScale);
     g.append("g")
         .attr("id", "x-axis")
         .attr("transform", "translate(0, "+ height +")")
         .call(xAxis);
 
-    //    b. y-axis
     let yAxis = d3.axisLeft(yScale);
     g.append("g")
         .attr("id", "y-axis")
@@ -160,7 +146,6 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
     // let legendDomain = ["XS", "S", "M", "L", "XL"];
     // createLegend(legendDomain, colorScale);
 
-    // 5. Create tooltip
     var tooltip = d3.select("body").append("div").classed("tooltip", true);
     g.selectAll("circle").on("mouseover", (event, d) => {
         var pos = d3.pointer(event, d);
@@ -235,7 +220,6 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
             .transition()
             .duration(1000)
             .attr("cx", d=> xScale(d[selectedGroup]));
-
     }
 
 
