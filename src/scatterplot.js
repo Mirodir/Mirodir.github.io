@@ -76,6 +76,11 @@ d3.select("body").append("select")
 d3.select("body").append("select")
     .attr("id", "selectXButton")
 
+d3.select("body").append('input')
+    .attr('type','text')
+    .attr('id','filterGames')
+    .attr('name','filterGames')
+
 d3.select("#selectYButton")
     .selectAll('select')
     .data(yData)
@@ -283,6 +288,11 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         switchXAxis(selectedOption)
     })
 
+    d3.select("#filterGames").on("input", function (event, d) {
+        const toFilterFor = d3.select(this).property("value")
+        hideGamesWithoutSubstring(toFilterFor);
+    })
+
 
     function switchYAxis(selectedGroup) {
         currYAxis = selectedGroup
@@ -395,6 +405,39 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 
 
     drawTrendline(xSeries, ySeries);
+
+    function hideGamesWithoutSubstring(substring){
+        {
+                data_points.filter(function (d) {
+                    return d['name'].toLowerCase().includes(substring.toLowerCase());
+                })
+                    .style("display", "block");
+
+                data_points.filter(function (d) {
+                    return !d['name'].toLowerCase().includes(substring.toLowerCase());
+                })
+                    .style("display", "none");
+            }
+
+            // var xSeries = data.filter(function (e){
+            //     if (currentGenre !== ""){
+            //         return e["single_genre"] === currentGenre;}
+            //     else {return true;}
+            // })
+            //     .map(function(d) {
+            //         return parseFloat(d[currXAxis]); });
+            //
+            // var ySeries = data.filter(function (e){
+            //     if (currentGenre !== ""){
+            //         return e["single_genre"] === currentGenre;}
+            //     else {return true;}
+            // })
+            //     .map(function(d) {
+            //         return parseFloat(d[currYAxis]); });
+            //
+            // updateTrendline(xSeries, ySeries)
+    }
+
 });
 
 
@@ -420,6 +463,8 @@ function drawTrendline(xSeries, ySeries){
         .attr("stroke", "black")
         .attr("stroke-width", 1);
 }
+
+
 
 function updateTrendline(xSeries, ySeries){
     var leastSquaresCoeff = leastSquares(xSeries, ySeries);
