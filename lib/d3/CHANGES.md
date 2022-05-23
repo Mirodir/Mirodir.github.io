@@ -924,7 +924,7 @@ The d3.geom.quadtree method has been replaced by [d3.quadtree](https://github.co
 
 ```js
 var quadtree = d3.geom.quadtree()
-    .extent([[0, 0], [width, height]])
+    .extent([[0, 0], [histoWidth, histoHeight]])
     (data);
 ```
 
@@ -932,7 +932,7 @@ Can be rewritten in 4.0 as:
 
 ```js
 var quadtree = d3.quadtree()
-    .extent([[0, 0], [width, height]])
+    .extent([[0, 0], [histoWidth, histoHeight]])
     .addAll(data);
 ```
 
@@ -1041,7 +1041,7 @@ The *ordinal*.rangeBands and *ordinal*.rangeRoundBands methods have been replace
 ```js
 var x = d3.scale.ordinal()
     .domain(["a", "b", "c"])
-    .rangeBands([0, width]);
+    .rangeBands([0, histoWidth]);
 ```
 
 Is equivalent to this in 4.0:
@@ -1049,7 +1049,7 @@ Is equivalent to this in 4.0:
 ```js
 var x = d3.scaleBand()
     .domain(["a", "b", "c"])
-    .range([0, width]);
+    .range([0, histoWidth]);
 ```
 
 The new [*band*.padding](https://github.com/d3/d3-scale/blob/master/README.md#band_padding), [*band*.paddingInner](https://github.com/d3/d3-scale/blob/master/README.md#band_paddingInner) and [*band*.paddingOuter](https://github.com/d3/d3-scale/blob/master/README.md#band_paddingOuter) methods replace the optional arguments to *ordinal*.rangeBands. The new [*band*.bandwidth](https://github.com/d3/d3-scale/blob/master/README.md#band_bandwidth) and [*band*.step](https://github.com/d3/d3-scale/blob/master/README.md#band_step) methods replace *ordinal*.rangeBand. There’s also a new [*band*.align](https://github.com/d3/d3-scale/blob/master/README.md#band_align) method which you can use to control how the extra space outside the bands is distributed, say to shift columns closer to the *y*-axis.
@@ -1059,7 +1059,7 @@ Similarly, the *ordinal*.rangePoints and *ordinal*.rangeRoundPoints methods have
 ```js
 var x = d3.scale.ordinal()
     .domain(["a", "b", "c"])
-    .rangePoints([0, width]);
+    .rangePoints([0, histoWidth]);
 ```
 
 Is equivalent to this in 4.0:
@@ -1067,7 +1067,7 @@ Is equivalent to this in 4.0:
 ```js
 var x = d3.scalePoint()
     .domain(["a", "b", "c"])
-    .range([0, width]);
+    .range([0, histoWidth]);
 ```
 
 The new [*point*.padding](https://github.com/d3/d3-scale/blob/master/README.md#point_padding) method replaces the optional *padding* argument to *ordinal*.rangePoints. Like *ordinal*.rangeBand with *ordinal*.rangePoints, the [*point*.bandwidth](https://github.com/d3/d3-scale/blob/master/README.md#point_bandwidth) method always returns zero; a new [*point*.step](https://github.com/d3/d3-scale/blob/master/README.md#point_step) method returns the interval between adjacent points.
@@ -1116,7 +1116,7 @@ Selections no longer subclass Array using [prototype chain injection](http://per
 Selections are now immutable: the elements and parents in a selection never change. (The elements’ attributes and content will of course still be modified!) The [*selection*.sort](https://github.com/d3/d3-selection/blob/master/README.md#selection_sort) and [*selection*.data](https://github.com/d3/d3-selection/blob/master/README.md#selection_data) methods now return new selections rather than modifying the selection in-place. In addition, [*selection*.append](https://github.com/d3/d3-selection/blob/master/README.md#selection_append) no longer merges entering nodes into the update selection; use [*selection*.merge](https://github.com/d3/d3-selection/blob/master/README.md#selection_merge) to combine enter and update after a data join. For example, the following [general update pattern](https://bl.ocks.org/mbostock/a8a5baa4c4a470cda598) in 3.x:
 
 ```js
-var circle = svg.selectAll("circle").data(data) // UPDATE
+var circle = histoSvg.selectAll("circle").data(data) // UPDATE
     .style("fill", "blue");
 
 circle.exit().remove(); // EXIT
@@ -1131,7 +1131,7 @@ circle // ENTER + UPDATE
 Would be rewritten in 4.0 as:
 
 ```js
-var circle = svg.selectAll("circle").data(data) // UPDATE
+var circle = histoSvg.selectAll("circle").data(data) // UPDATE
     .style("fill", "blue");
 
 circle.exit().remove(); // EXIT

@@ -19,20 +19,24 @@ const xData = [
     {
         label:"Time to beat main game",
         value:"main_50",
+        trueValue:"main_time",
         axis:"Time to beat the main story in hours"
     },    {
         label:"Time to beat main game and extras",
         value:"main_extra_time_50",
+        trueValue:"main_extra_time",
         axis:"Time to complete main game and some bonus content in hours"
 
     },    {
         label:"Time to complete everything",
         value:"completion_time_100",
+        trueValue:"completion_time",
         axis:"Time to see and do everything a game has to offer in hours"
 
     },    {
         label:"Time spent only on bonus content",
         value:"bonus_content_500",
+        trueValue:"bonus_content_500",
         axis:"Time to see and do everything a game has to offer that is not part of the main story in hours"
     }
 ];
@@ -469,7 +473,6 @@ function drawTrendline(xSeries, ySeries){
 function updateTrendline(xSeries, ySeries){
     var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
-    console.log("hiho")
 
     var x1 = 0;
     var y1 = leastSquaresCoeff[1];
