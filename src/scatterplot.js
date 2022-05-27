@@ -1,9 +1,83 @@
+// using d3 for convenience
+var main = d3.select("main");
+var scrolly = main.select("#scrolly");
+var figure = scrolly.select("figure");
+var article = scrolly.select("article");
+var step = article.selectAll(".step");
+
+// initialize the scrollama
+var scroller = scrollama();
+
+// generic window resize listener event
+function handleResize() {
+    // 1. update height of step elements
+    var stepH = Math.floor(window.innerHeight * 0.75);
+    step.style("height", stepH + "px");
+
+    var figureHeight = window.innerHeight / 2;
+    var figureMarginTop = (window.innerHeight - figureHeight) / 5;
+
+    figure
+        .style("height", figureHeight + "px")
+        .style("top", figureMarginTop + "px");
+
+    // 3. tell scrollama to update new element dimensions
+    scroller.resize();
+}
+
+// scrollama event handlers
+function handleStepEnter(response) {
+    console.log(response);
+    // response = { element, direction, index }
+
+    // add color to current step only
+    step.classed("is-active", function (d, i) {
+        return i === response.index;
+    });
+
+    // update graphic based on step
+    // figure.select("p").text(response.index + 1);
+}
+
+function setupStickyfill() {
+    d3.selectAll(".sticky").each(function () {
+        Stickyfill.add(this);
+    });
+}
+
+function init() {
+    setupStickyfill();
+
+    // 1. force a resize on load to ensure proper dimensions are sent to scrollama
+    handleResize();
+
+    // 2. setup the scroller passing options
+    // 		this will also initialize trigger observations
+    // 3. bind scrollama event handlers (this can be chained like below)
+    scroller
+        .setup({
+            step: "#scrolly article .step",
+            offset: 0.33,
+            debug: false
+        })
+        .onStepEnter(handleStepEnter);
+}
+
+// kick things off
+init();
+
+
 // create svg canvas
-const canvHeight = 700, canvWidth = 1600;
-const svg = d3.select("body").append("svg")
-    .attr("width", canvWidth)
-    .attr("height", canvHeight)
-    .style("border", "1px solid");
+const margin = {top: 10, right: 100, bottom: 10, left: 50};
+const width = window.innerWidth*0.9;
+const height = window.innerHeight*0.8;
+
+
+// const canvHeight = 700, canvWidth = 1600;
+const svg = d3.select("figure").append("svg")
+    .attr("width", width*1.2)
+    .attr("height", height)
+    // .style("border", "1px solid");
 //
 // const svgGenres = d3.select("body").append("svg")
 //     .attr("width", canvWidth)
@@ -11,9 +85,7 @@ const svg = d3.select("body").append("svg")
 //     .style("border", "1px solid");
 
 
-const margin = {top: 50, right: 200, bottom: 50, left: 60};
-const width = canvWidth - margin.left - margin.right;
-const height = canvHeight - margin.top - margin.bottom;
+
 
 const xData = [
     {
@@ -101,22 +173,22 @@ d3.select("#selectXButton")
     .text(function (d) { return d.label; })
     .attr("value", function (d) { return d.value; })
 
-svg.append("text")
-    .attr("y", 0)
-    .attr("x", margin.left)
-    .attr("dy", "1.5em")
-    .attr("font-family", "sans-serif")
-    .attr("font-size", "24px")
-    .attr("text-type", "chart-title")
-    .style("text-anchor", "left")
-    .text("Games on Steam");
+// svg.append("text")
+//     .attr("y", 0)
+//     .attr("x", margin.left)
+//     .attr("dy", "1.5em")
+//     .attr("font-family", "sans-serif")
+//     .attr("font-size", "24px")
+//     .attr("text-type", "chart-title")
+//     .style("text-anchor", "left")
+//     .text("Games on Steam");
 
 const g = svg.append("g")
     .attr("id", "chart-area")
     .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
 
 xAxisLabel = g.append("text")
-    .attr("y", height + margin.bottom / 2)
+    .attr("y", height *0.77)
     .attr("x", width / 2)
     .attr("dy", "1em")
     .attr("font-family", "sans-serif")
@@ -137,7 +209,7 @@ yAxisLabel = g.append("text")
 function createLegend(legendDomain, data) {
     const legend = svg.append("g")
         .attr("id", "legend")
-        .attr("transform", "translate(" + (canvWidth - margin.right+10) + "," + margin.top + ")")
+        .attr("transform", "translate(" + (width-30) + "," + 20 + ")")
         .on("click", function (event){
             const genre = event.target.getAttribute("data-genre");
             if (genre === currentGenre){
@@ -206,8 +278,8 @@ function createLegend(legendDomain, data) {
         .attr("width", margin.right - 15)
         .attr("height", legendDomain.length * 30 + 10)
         .attr("fill", "none")
-        .attr("stroke", "black")
-        .attr("stroke-width", "1");
+        // .attr("stroke", "black")
+        // .attr("stroke-width", "1");
 }
 
 
@@ -217,11 +289,11 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 
     xScale = d3.scaleLinear()
         .domain(xDomain)
-        .rangeRound([0, width]);
+        .rangeRound([0, width - margin.right]);
 
     yScale = d3.scaleLinear()
         .domain(yDomain)
-        .rangeRound([height, 0])
+        .rangeRound([height*0.75, 0])
         .nice(5);
 
     colorScale = d3.scaleOrdinal(d3.schemeCategory10);
@@ -229,7 +301,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
     let xAxis = d3.axisBottom(xScale);
     drawnXAxis = g.append("g")
         .attr("id", "x-axis")
-        .attr("transform", "translate(0, " + height + ")")
+        .attr("transform", "translate(0, " + height*0.75 + ")")
         .call(xAxis);
 
     let yAxis = d3.axisLeft(yScale);
@@ -523,3 +595,11 @@ function leastSquares(xSeries, ySeries) {
 
     return [slope, intercept, rSquare];
 }
+
+
+
+
+
+
+
+
