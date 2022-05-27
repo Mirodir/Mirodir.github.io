@@ -18,24 +18,24 @@ const height = canvHeight - margin.top - margin.bottom;
 const xData = [
     {
         label:"Time to beat main game",
-        value:"main_50",
+        value:"main_50_noise",
         trueValue:"main_time",
         axis:"Time to beat the main story in hours"
     },    {
         label:"Time to beat main game and extras",
-        value:"main_extra_time_50",
+        value:"main_extra_time_50_noise",
         trueValue:"main_extra_time",
         axis:"Time to complete main game and some bonus content in hours"
 
     },    {
         label:"Time to complete everything",
-        value:"completion_time_100",
+        value:"completion_time_100_noise",
         trueValue:"completion_time",
         axis:"Time to see and do everything a game has to offer in hours"
 
     },    {
         label:"Time spent only on bonus content",
-        value:"bonus_content_500",
+        value:"bonus_content_500_noise",
         trueValue:"bonus_content_500",
         axis:"Time to see and do everything a game has to offer that is not part of the main story in hours"
     }
@@ -63,7 +63,7 @@ let drawnXAxis;
 let drawnYAxis;
 let xAxisLabel;
 let yAxisLabel;
-let currXAxis = "main_50";
+let currXAxis = "main_50_noise";
 let currYAxis = "score";
 let xDomain;
 let yDomain;
@@ -212,7 +212,7 @@ function createLegend(legendDomain, data) {
 
 
 d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(function(data) {
-    xDomain = d3.extent(data, d => Number(d.main_50));
+    xDomain = d3.extent(data, d => Number(d.main_50_noise));
     yDomain = d3.extent(data, d => Number(d.score));
 
     xScale = d3.scaleLinear()
@@ -244,9 +244,9 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         .style("fill", d => colorScale(d["single_genre"]))
         .attr("data-genre", d => d["single_genre"])
         .attr("class", "game_data_point")
-        .attr("cx", d => xScale(d.main_50))
+        .attr("cx", d => xScale(d.main_50_noise))
         .attr("cy", d => yScale(d.score))
-        .attr("r", 1.5)
+        .attr("r", 2)
         .classed("active", true);
 
     let legendDomain = ["Indie",
