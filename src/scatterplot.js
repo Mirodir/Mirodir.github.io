@@ -35,6 +35,17 @@ function handleStepEnter(response) {
         return i === response.index;
     });
 
+    if(response.index !== 0){
+        svgAllGames.attr("display", "block");
+        svgGenres.attr("display", "none");
+    }
+
+    if(response.index === 0){
+        svgAllGames.attr("display", "none");
+        svgGenres.attr("display", "block");
+    }
+
+
     // update graphic based on step
     // figure.select("p").text(response.index + 1);
 }
@@ -74,9 +85,16 @@ const height = window.innerHeight*0.8;
 
 
 // const canvHeight = 700, canvWidth = 1600;
-const svg = d3.select("figure").append("svg")
+const svgAllGames = figure.append("svg")
     .attr("width", width*1.2)
     .attr("height", height)
+    .attr("display", "none");
+
+const svgGenres = figure.append("svg")
+    .attr("width", width*1.2)
+    .attr("height", height)
+    .attr("display", "none");
+
     // .style("border", "1px solid");
 //
 // const svgGenres = d3.select("body").append("svg")
@@ -133,8 +151,10 @@ const yData = [
 let currentGenre = "";
 let drawnXAxis;
 let drawnYAxis;
-let xAxisLabel;
-let yAxisLabel;
+let xAxisLabelAllGames;
+let yAxisLabelAllGames;
+let xAxisLabelGenres;
+let yAxisLabelGenres;
 let currXAxis = "main_50_noise";
 let currYAxis = "score";
 let xDomain;
@@ -183,11 +203,15 @@ d3.select("#selectXButton")
 //     .style("text-anchor", "left")
 //     .text("Games on Steam");
 
-const g = svg.append("g")
+const chartAreaAllGames = svgAllGames.append("g")
     .attr("id", "chart-area")
     .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
 
-xAxisLabel = g.append("text")
+const chartAreaGenres = svgGenres.append("g")
+    .attr("id", "chart-area2")
+    .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
+
+xAxisLabelAllGames = chartAreaAllGames.append("text")
     .attr("y", height *0.77)
     .attr("x", width / 2)
     .attr("dy", "1em")
@@ -196,7 +220,27 @@ xAxisLabel = g.append("text")
     .style("text-anchor", "middle")
     .text("Time to beat in hours");
 
-yAxisLabel = g.append("text")
+xAxisLabelGenres = chartAreaGenres.append("text")
+    .attr("y", height *0.77)
+    .attr("x", width / 2)
+    .attr("dy", "1em")
+    .attr("font-family", "sans-serif")
+    .attr("text-type", "x-axis-label")
+    .style("text-anchor", "middle")
+    .text("Time to beat in hours");
+
+
+yAxisLabelAllGames = chartAreaAllGames.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("font-family", "sans-serif")
+    .attr("text-type", "y-axis-label")
+    .style("text-anchor", "middle")
+    .text("Review Rating in %");
+
+yAxisLabelGenres = chartAreaGenres.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)
     .attr("x",0 - (height / 2))
@@ -207,7 +251,7 @@ yAxisLabel = g.append("text")
     .text("Review Rating in %");
 
 function createLegend(legendDomain, data) {
-    const legend = svg.append("g")
+    const legendAllGames = svgAllGames.append("g")
         .attr("id", "legend")
         .attr("transform", "translate(" + (width-30) + "," + 20 + ")")
         .on("click", function (event){
@@ -250,11 +294,11 @@ function createLegend(legendDomain, data) {
 
         });
 
-    const legend_entry = legend.selectAll("rect")
+    const legend_entryAllGames = legendAllGames.selectAll("rect")
         .data(legendDomain)
         .enter();
 
-    legend_entry.append("rect")
+    legend_entryAllGames.append("rect")
         .attr("x", 10)
         .attr("y", (d,i) => 30 * i + 10)
         .attr("width", 20)
@@ -265,21 +309,95 @@ function createLegend(legendDomain, data) {
         .attr("data-genre", d => d);
 
 
-    legend_entry.append("text")
+    legend_entryAllGames.append("text")
         .attr("x", 40)
         .attr("y", (d,i) => 30 * i + 25)
         .text(d => d)
         .attr("data-genre", d => d);
 
 
-    legend.append("rect")
+    legendAllGames.append("rect")
         .attr("x", 1)
         .attr("y", 1)
         .attr("width", margin.right - 15)
         .attr("height", legendDomain.length * 30 + 10)
         .attr("fill", "none")
-        // .attr("stroke", "black")
-        // .attr("stroke-width", "1");
+    // .attr("stroke", "black")
+    // .attr("stroke-width", "1");
+
+    const legendGenres = svgGenres.append("g")
+        .attr("id", "legend")
+        .attr("transform", "translate(" + (width-30) + "," + 20 + ")")
+        .on("click", function (event){
+            const genre = event.target.getAttribute("data-genre");
+            if (genre === currentGenre){
+                data_points.style("display", "block")
+                currentGenre = "";
+            }
+            else {
+                data_points.filter(function (d) {
+                    return d['single_genre'] === genre;
+                })
+                    .style("display", "block");
+
+                data_points.filter(function (d) {
+                    return d['single_genre'] !== genre;
+                })
+                    .style("display", "none");
+                currentGenre = genre;
+            }
+
+            var xSeries = data.filter(function (e){
+                if (currentGenre !== ""){
+                    return e["single_genre"] === currentGenre;}
+                else {return true;}
+            })
+                .map(function(d) {
+                    return parseFloat(d[currXAxis]); });
+
+            var ySeries = data.filter(function (e){
+                if (currentGenre !== ""){
+                    return e["single_genre"] === currentGenre;}
+                else {return true;}
+            })
+                .map(function(d) {
+                    return parseFloat(d[currYAxis]); });
+
+            updateTrendline(xSeries, ySeries)
+
+
+        });
+
+    const legend_entryGenres = legendGenres.selectAll("rect")
+        .data(legendDomain)
+        .enter();
+
+    legend_entryGenres.append("rect")
+        .attr("x", 10)
+        .attr("y", (d,i) => 30 * i + 10)
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", d => colorScale(d))
+        .attr("stroke", "black")
+        .attr("stroke-width", "1")
+        .attr("data-genre", d => d);
+
+
+    legend_entryGenres.append("text")
+        .attr("x", 40)
+        .attr("y", (d,i) => 30 * i + 25)
+        .text(d => d)
+        .attr("data-genre", d => d);
+
+
+    legendGenres.append("rect")
+        .attr("x", 1)
+        .attr("y", 1)
+        .attr("width", margin.right - 15)
+        .attr("height", legendDomain.length * 30 + 10)
+        .attr("fill", "none")
+    // .attr("stroke", "black")
+    // .attr("stroke-width", "1");
 }
 
 
@@ -299,18 +417,18 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
     colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
     let xAxis = d3.axisBottom(xScale);
-    drawnXAxis = g.append("g")
+    drawnXAxis = chartAreaAllGames.append("g")
         .attr("id", "x-axis")
         .attr("transform", "translate(0, " + height*0.75 + ")")
         .call(xAxis);
 
     let yAxis = d3.axisLeft(yScale);
-    drawnYAxis = g.append("g")
+    drawnYAxis = chartAreaAllGames.append("g")
         .attr("id", "y-axis")
         .call(yAxis);
 
 
-    data_points = g.selectAll("circle")
+    data_points = chartAreaAllGames.selectAll("circle")
         .data(data)
         .join('circle')
         .style("fill", d => colorScale(d["single_genre"]))
@@ -330,11 +448,11 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         "Simulation",
         "Racing",
         "Sports",
-        "Massively Multiplayer"];
+        "MMO"];
     createLegend(legendDomain, data);
 
     var tooltip = d3.select("body").append("div").classed("tooltip", true);
-    g.selectAll("circle").on("mouseover", (event, d) => {
+    chartAreaAllGames.selectAll("circle").on("mouseover", (event, d) => {
         var pos = d3.pointer(event, d);
         tooltip
             .style("left", pos[0] + "px")
@@ -388,7 +506,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
                 newAxisText = yData[datum].axis;
             }
         }
-        yAxisLabel.text(newAxisText)
+        yAxisLabelAllGames.text(newAxisText)
 
 
         data_points
@@ -430,7 +548,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
                 newAxisText = xData[datum].axis;
             }
         }
-        xAxisLabel.text(newAxisText)
+        xAxisLabelAllGames.text(newAxisText)
 
         drawnXAxis.call(xAxis);
 
@@ -517,6 +635,79 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 });
 
 
+d3.csv("./data/genre_medians.csv").then(function(data) {
+    // let xDomain = d3.extent(data, d => Number(d.main_50));
+    // let yDomain = d3.extent(data, d => Number(d.score));
+
+    let xScale = d3.scaleLinear()
+        .domain([0, 70])
+        .rangeRound([0, width - margin.right]);
+
+    let yScale = d3.scaleLinear()
+        .domain([0,100])
+        .rangeRound([height*0.75, 0])
+        .nice(5);
+
+    colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+    let xAxis = d3.axisBottom(xScale);
+    drawnXAxis = chartAreaGenres.append("g")
+        .attr("id", "x-axis")
+        .attr("transform", "translate(0, " + height*0.75 + ")")
+        .call(xAxis);
+
+    let yAxis = d3.axisLeft(yScale);
+    drawnYAxis = chartAreaGenres.append("g")
+        .attr("id", "y-axis")
+        .call(yAxis);
+
+
+    let data_points = chartAreaGenres.selectAll("circle")
+        .data(data)
+        .join('circle')
+        .style("fill", d => colorScale(d["single_genre"]))
+        .attr("data-genre", d => d["single_genre"])
+        .attr("class", "game_data_point")
+        .attr("cx", d => xScale(d.main_time))
+        .attr("cy", d => yScale(d.score))
+        .attr("r", 20)
+        .attr("opacity", 0.8)
+        .classed("active", true);
+
+    let legendDomain = ["Indie",
+        "Adventure",
+        "Action",
+        "Casual",
+        "RPG",
+        "Strategy",
+        "Simulation",
+        "Racing",
+        "Sports",
+        "MMO"];
+    createLegend(legendDomain, data);
+
+    var tooltip = d3.select("body").append("div").classed("tooltip", true);
+    chartAreaGenres.selectAll("circle").on("mouseover", (event, d) => {
+        var pos = d3.pointer(event, d);
+        tooltip
+            .style("left", pos[0] + "px")
+            .style("top", pos[1] - 28 + "px")
+            .style("visibility", "visible")
+            .html(`Name: ${d.single_genre}<br/>`
+                + `Price: ${Math.round(d.initialprice * 100) / 100} USD<br/>`
+                + `Main Story Time: ${Math.round(d.main_time * 100) / 100} hours<br/>`
+                + `Main Story+Extras Time: ${Math.round(d.main_extra_time * 100) / 100} hours<br/>`
+                + `100% Time: ${Math.round(d.completion_time * 100) / 100} hours<br/>`
+                + `Concurrent Users: ${Math.round(d.ccu * 100) / 100} players<br/>`
+                + `Score: ${Math.round(d.score * 100) / 100}%<br/>`);
+    })
+        .on("mouseout", (event, d) => {
+            tooltip.style("visibility", "hidden");
+        });
+
+});
+
+
 function drawTrendline(xSeries, ySeries){
     var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
@@ -526,7 +717,7 @@ function drawTrendline(xSeries, ySeries){
     var y2 = leastSquaresCoeff[0] * xDomain[xDomain.length - 1] + leastSquaresCoeff[1];
     var trendData = [[x1,y1,x2,y2]];
 
-    trendline = g.selectAll("trendline")
+    trendline = chartAreaAllGames.selectAll("trendline")
         .data(trendData);
 
     tLine = trendline.enter()
@@ -552,7 +743,7 @@ function updateTrendline(xSeries, ySeries){
     var y2 = leastSquaresCoeff[0] * xDomain[xDomain.length - 1] + leastSquaresCoeff[1];
     var trendData = [[x1,y1,x2,y2]];
 
-    trendline = g.selectAll("trendline")
+    trendline = chartAreaAllGames.selectAll("trendline")
         .data(trendData);
 
     trendline.selectAll("line").data(function (d){return d;});
