@@ -12,7 +12,7 @@ var scroller = scrollama();
 function handleResize() {
     // 1. update height of step elements
     var stepH = Math.floor(window.innerHeight * 0.75);
-    step.style("height", stepH + "px");
+    // step.style("height", stepH + "px");
 
     var figureHeight = window.innerHeight / 2;
     var figureMarginTop = (window.innerHeight - figureHeight) / 5;
@@ -27,27 +27,128 @@ function handleResize() {
 
 // scrollama event handlers
 function handleStepEnter(response) {
-    console.log(response);
-    // response = { element, direction, index }
 
-    // add color to current step only
     step.classed("is-active", function (d, i) {
         return i === response.index;
     });
 
-    if(response.index !== 0){
-        svgAllGames.attr("display", "block");
-        svgGenres.attr("display", "none");
+    switch (response.index){
+        case 0:
+            // genres
+            svgAllGames.attr("display", "none");
+            svgGenres.attr("display", "block");
+            break;
+        case 1:
+            // Adventure Games
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            selectGenre("Adventure");
+            break;
+        case 2:
+            // Racing Games
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            selectGenre("Racing");
+            break;
+        case 3:
+            // Sports
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            selectGenre("Sports");
+            legendAllGames.on('click', null);
+            XSelect.value = "main_70_noise";
+            XSelect.dispatchEvent(new Event('change'));
+            YSelect.value = "score";
+            YSelect.dispatchEvent(new Event('change'));
+            break;
+        case 4:
+            //All Games
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            legendAllGames.on("click", function (event){
+                const genre = event.target.getAttribute("data-genre");
+                console.log(genre);
+                selectGenre(genre);
+            })
+            YSelect.disabled = true;
+            XSelect.disabled = false;
+            XSelect.value = "bonus_content_250_noise";
+            XSelect.dispatchEvent(new Event('change'));
+            YSelect.value = "score";
+            YSelect.dispatchEvent(new Event('change'));
+            break;
+        // case 5:
+        //     //bonus content
+        //     svgAllGames.attr("display", "block");
+        //     svgGenres.attr("display", "none");
+        //     if (currentGenre !== ""){
+        //         selectGenre(currentGenre);
+        //     }
+        //     YSelect.disabled = true;
+        //     XSelect.disabled = false;
+        //     XSelect.value = "bonus_content_250_noise";
+        //     XSelect.dispatchEvent(new Event('change'));
+        //     YSelect.value = "score";
+        //     YSelect.dispatchEvent(new Event('change'));
+        //     break;
+        case 5:
+            //Price
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            YSelect.disabled = false;
+            XSelect.disabled = false;
+            XSelect.value = "bonus_content_250_noise";
+            XSelect.dispatchEvent(new Event('change'));
+            YSelect.value = "initialprice";
+            YSelect.dispatchEvent(new Event('change'));
+            break;
+        case 6:
+            //MMO Prices
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            selectGenre("MMO");
+            YSelect.disabled = false;
+            XSelect.disabled = false;
+            XSelect.value = "main_70_noise";
+            XSelect.dispatchEvent(new Event('change'));
+            YSelect.value = "initialprice";
+            YSelect.dispatchEvent(new Event('change'));
+            break;
+        case 7:
+            //Feel free to explore
+            svgAllGames.attr("display", "block");
+            svgGenres.attr("display", "none");
+            if (currentGenre !== ""){
+                selectGenre(currentGenre);
+            }
+            YSelect.disabled = false;
+            XSelect.disabled = false;
+            XSelect.value = "main_70_noise";
+            XSelect.dispatchEvent(new Event('change'));
+            YSelect.value = "score";
+            YSelect.dispatchEvent(new Event('change'));
+            break;
+
     }
 
-    if(response.index === 0){
-        svgAllGames.attr("display", "none");
-        svgGenres.attr("display", "block");
-    }
-
-
-    // update graphic based on step
-    // figure.select("p").text(response.index + 1);
 }
 
 function setupStickyfill() {
@@ -58,23 +159,15 @@ function setupStickyfill() {
 
 function init() {
     setupStickyfill();
-
-    // 1. force a resize on load to ensure proper dimensions are sent to scrollama
     handleResize();
-
-    // 2. setup the scroller passing options
-    // 		this will also initialize trigger observations
-    // 3. bind scrollama event handlers (this can be chained like below)
     scroller
         .setup({
             step: "#scrolly article .step",
-            offset: 0.33,
+            offset: 0.8,
             debug: false
         })
         .onStepEnter(handleStepEnter);
 }
-
-// kick things off
 init();
 
 
@@ -95,38 +188,30 @@ const svgGenres = figure.append("svg")
     .attr("height", height)
     .attr("display", "none");
 
-    // .style("border", "1px solid");
-//
-// const svgGenres = d3.select("body").append("svg")
-//     .attr("width", canvWidth)
-//     .attr("height", canvHeight)
-//     .style("border", "1px solid");
-
-
 
 
 const xData = [
     {
         label:"Time to beat main game",
-        value:"main_50_noise",
+        value:"main_70_noise",
         trueValue:"main_time",
         axis:"Time to beat the main story in hours"
     },    {
         label:"Time to beat main game and extras",
-        value:"main_extra_time_50_noise",
+        value:"main_extra_time_70_noise",
         trueValue:"main_extra_time",
         axis:"Time to complete main game and some bonus content in hours"
 
     },    {
         label:"Time to complete everything",
-        value:"completion_time_100_noise",
-        trueValue:"completion_time",
+        value:"completion_time_250_noise",
+        trueValue:"completion_time_250",
         axis:"Time to see and do everything a game has to offer in hours"
 
     },    {
         label:"Time spent only on bonus content",
-        value:"bonus_content_500_noise",
-        trueValue:"bonus_content_500",
+        value:"bonus_content_250_noise",
+        trueValue:"bonus_content_250",
         axis:"Time to see and do everything a game has to offer that is not part of the main story in hours"
     }
 ];
@@ -134,17 +219,17 @@ const yData = [
     {
         label:"review score",
         value:"score",
-        axis:"Review Rating in %"
+        axis:"Review Rating, %"
     },
     {
         label:"price",
         value:"initialprice",
-        axis:"Price of the game not on sale in USD"
+        axis:"Price, USD"
     },
     {
         label:"Concurrent Users",
-        value:"ccu",
-        axis:"Average amount of concurrent players"
+        value:"ccu_5k",
+        axis:"Concurrent players"
     }
 ];
 
@@ -155,7 +240,7 @@ let xAxisLabelAllGames;
 let yAxisLabelAllGames;
 let xAxisLabelGenres;
 let yAxisLabelGenres;
-let currXAxis = "main_50_noise";
+let currXAxis = "main_70_noise";
 let currYAxis = "score";
 let xDomain;
 let yDomain;
@@ -164,18 +249,23 @@ let yScale;
 let trendline;
 let tLine;
 let colorScale;
+let globalData;
+let legendAllGames;
 
 var data_points;
 
-d3.select("body").append("select")
+
+d3.select("figure").append("select")
     .attr("id", "selectYButton")
-d3.select("body").append("select")
+d3.select("figure").append("select")
     .attr("id", "selectXButton")
 
-d3.select("body").append('input')
+d3.select("figure").append('input')
     .attr('type','text')
     .attr('id','filterGames')
     .attr('name','filterGames')
+
+
 
 d3.select("#selectYButton")
     .selectAll('select')
@@ -185,6 +275,8 @@ d3.select("#selectYButton")
     .text(function (d) { return d.label; })
     .attr("value", function (d) { return d.value; })
 
+
+
 d3.select("#selectXButton")
     .selectAll('select')
     .data(xData)
@@ -192,6 +284,12 @@ d3.select("#selectXButton")
     .append('option')
     .text(function (d) { return d.label; })
     .attr("value", function (d) { return d.value; })
+
+let YSelect = document.getElementById("selectYButton");
+let XSelect = document.getElementById("selectXButton");
+
+YSelect.disabled = true;
+XSelect.disabled = true;
 
 // svg.append("text")
 //     .attr("y", 0)
@@ -250,49 +348,47 @@ yAxisLabelGenres = chartAreaGenres.append("text")
     .style("text-anchor", "middle")
     .text("Review Rating in %");
 
+function selectGenre(genre){
+    if (genre === currentGenre){
+        data_points.style("display", "block")
+        currentGenre = "";
+    }
+    else {
+        data_points.filter(function (d) {
+            return d['single_genre'] === genre;
+        })
+            .style("display", "block");
+
+        data_points.filter(function (d) {
+            return d['single_genre'] !== genre;
+        })
+            .style("display", "none");
+        currentGenre = genre;
+    }
+
+    var xSeries = globalData.filter(function (e){
+        if (currentGenre !== ""){
+            return e["single_genre"] === currentGenre;}
+        else {return true;}
+    })
+        .map(function(d) {
+            return parseFloat(d[currXAxis]); });
+
+    var ySeries = globalData.filter(function (e){
+        if (currentGenre !== ""){
+            return e["single_genre"] === currentGenre;}
+        else {return true;}
+    })
+        .map(function(d) {
+            return parseFloat(d[currYAxis]); });
+
+    updateTrendline(xSeries, ySeries);
+}
+
 function createLegend(legendDomain, data) {
-    const legendAllGames = svgAllGames.append("g")
+    legendAllGames = svgAllGames.append("g")
         .attr("id", "legend")
-        .attr("transform", "translate(" + (width-30) + "," + 20 + ")")
-        .on("click", function (event){
-            const genre = event.target.getAttribute("data-genre");
-            if (genre === currentGenre){
-                data_points.style("display", "block")
-                currentGenre = "";
-            }
-            else {
-                data_points.filter(function (d) {
-                    return d['single_genre'] === genre;
-                })
-                    .style("display", "block");
-
-                data_points.filter(function (d) {
-                    return d['single_genre'] !== genre;
-                })
-                    .style("display", "none");
-                currentGenre = genre;
-            }
-
-            var xSeries = data.filter(function (e){
-                if (currentGenre !== ""){
-                    return e["single_genre"] === currentGenre;}
-                else {return true;}
-            })
-                .map(function(d) {
-                    return parseFloat(d[currXAxis]); });
-
-            var ySeries = data.filter(function (e){
-                if (currentGenre !== ""){
-                    return e["single_genre"] === currentGenre;}
-                else {return true;}
-            })
-                .map(function(d) {
-                    return parseFloat(d[currYAxis]); });
-
-            updateTrendline(xSeries, ySeries)
-
-
-        });
+        .attr("transform", "translate(" + (width-30) + "," + 20 + ")");
 
     const legend_entryAllGames = legendAllGames.selectAll("rect")
         .data(legendDomain)
@@ -395,14 +491,15 @@ function createLegend(legendDomain, data) {
         .attr("y", 1)
         .attr("width", margin.right - 15)
         .attr("height", legendDomain.length * 30 + 10)
-        .attr("fill", "none")
+        .attr("fill", "none");
     // .attr("stroke", "black")
     // .attr("stroke-width", "1");
 }
 
 
 d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(function(data) {
-    xDomain = d3.extent(data, d => Number(d.main_50_noise));
+    globalData = data;
+    xDomain = d3.extent(data, d => Number(d.main_70_noise));
     yDomain = d3.extent(data, d => Number(d.score));
 
     xScale = d3.scaleLinear()
@@ -427,14 +524,13 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         .attr("id", "y-axis")
         .call(yAxis);
 
-
     data_points = chartAreaAllGames.selectAll("circle")
         .data(data)
         .join('circle')
         .style("fill", d => colorScale(d["single_genre"]))
         .attr("data-genre", d => d["single_genre"])
         .attr("class", "game_data_point")
-        .attr("cx", d => xScale(d.main_50_noise))
+        .attr("cx", d => xScale(d.main_70_noise))
         .attr("cy", d => yScale(d.score))
         .attr("r", 2)
         .classed("active", true);
@@ -449,6 +545,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         "Racing",
         "Sports",
         "MMO"];
+
     createLegend(legendDomain, data);
 
     var tooltip = d3.select("body").append("div").classed("tooltip", true);
@@ -493,7 +590,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         yDomain = d3.extent(data, d => Number(d[currYAxis]));
         yScale = d3.scaleLinear()
             .domain(yDomain)
-            .rangeRound([height, 0])
+            .rangeRound([height*0.75, 0])
             .nice(5);
 
         yAxis = d3.axisLeft(yScale);
@@ -510,7 +607,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 
 
         data_points
-            .data(data)
+            .data(globalData)
             .transition()
             .duration(1000)
             .attr("cy", d=> yScale(d[currYAxis]));
@@ -539,7 +636,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         xDomain = d3.extent(data, d => Number(d[currXAxis]));
         xScale = d3.scaleLinear()
             .domain(xDomain)
-            .rangeRound([0, width])
+            .rangeRound([0, width - margin.right]);
 
         xAxis = d3.axisBottom(xScale);
         let newAxisText;
@@ -554,7 +651,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 
 
         data_points
-            .data(data)
+            .data(globalData)
             .transition()
             .duration(1000)
             .attr("cx", d=> xScale(d[currXAxis]));
@@ -640,7 +737,7 @@ d3.csv("./data/genre_medians.csv").then(function(data) {
     // let yDomain = d3.extent(data, d => Number(d.score));
 
     let xScale = d3.scaleLinear()
-        .domain([0, 70])
+        .domain([0, 71])
         .rangeRound([0, width - margin.right]);
 
     let yScale = d3.scaleLinear()
@@ -651,13 +748,13 @@ d3.csv("./data/genre_medians.csv").then(function(data) {
     colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
     let xAxis = d3.axisBottom(xScale);
-    drawnXAxis = chartAreaGenres.append("g")
+    let drawnXAxis = chartAreaGenres.append("g")
         .attr("id", "x-axis")
         .attr("transform", "translate(0, " + height*0.75 + ")")
         .call(xAxis);
 
     let yAxis = d3.axisLeft(yScale);
-    drawnYAxis = chartAreaGenres.append("g")
+    let drawnYAxis = chartAreaGenres.append("g")
         .attr("id", "y-axis")
         .call(yAxis);
 
@@ -684,7 +781,7 @@ d3.csv("./data/genre_medians.csv").then(function(data) {
         "Racing",
         "Sports",
         "MMO"];
-    createLegend(legendDomain, data);
+    // createLegend(legendDomain, data);
 
     var tooltip = d3.select("body").append("div").classed("tooltip", true);
     chartAreaGenres.selectAll("circle").on("mouseover", (event, d) => {
@@ -748,8 +845,6 @@ function updateTrendline(xSeries, ySeries){
 
     trendline.selectAll("line").data(function (d){return d;});
 
-    console.log(colorScale);
-
     tLine.transition()
         .duration(1000)
         .attr("x1", xScale(x1))
@@ -758,8 +853,6 @@ function updateTrendline(xSeries, ySeries){
         .attr("y2", yScale(y2))
         .attr("stroke", "black")
         .attr("stroke-width", 1);
-
-    console.log(tLine)
 
 }
 

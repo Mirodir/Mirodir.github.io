@@ -28,15 +28,16 @@
 
     #scrolly {
       position: relative;
-      background-color: #f3f3f3;
+      background-color: #ffffff;
       padding: 1rem;
     }
 
     article {
       position: relative;
       padding: 0;
-      max-width: 20rem;
+      max-width: 80vw;
       margin: 0 auto;
+      pointer-events: none;
     }
 
     figure {
@@ -48,7 +49,6 @@
       -webkit-transform: translate3d(0, 0, 0);
       -moz-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
-      background-color: #f1f1f1;
       z-index: 0;
     }
 
@@ -66,10 +66,11 @@
       color: #fff;
     }
 
-    .step {
-      margin: 0 auto 2rem auto;
-      color: #fff;
-      background-color: rgba(0, 0, 0, 0.1);
+
+    .step p{
+      padding: 1rem;
+      background-color: rgba(105, 105, 105, 0.5);
+      color: white;
     }
 
     .step:last-child {
@@ -77,16 +78,23 @@
     }
 
     .step.is-active p {
-      background-color: goldenrod;
-      color: #3b3b3b;
+      background-color: rgb(218, 165, 32, 0.5);
+      color: rgb(59, 59, 59);
     }
 
-    .step p {
+    .step {
+      margin: 0 auto 110vh auto;
+      color: rgb(59, 59, 59);
       text-align: center;
-      padding: 1rem;
       font-size: 1.5rem;
-      background-color: #3b3b3b;
+      background-color: rgba(0,0,0,0.1);
+      pointer-events: auto;
     }
+
+    .step > * {
+      padding: 1em;
+    }
+
 
     * {
       box-sizing: border-box;
@@ -253,16 +261,38 @@
 
     <article>
       <div class="step" data-step="1">
-        <p>STEP 1</p>
+        <p>Genres</p>
+        <div class="inner-step">Almost all genres have their games' main stories take 2 to 15 hours. MMOs seemingly play by different rules with a median of 62 hours to beat.<br>
+          Hovering over a genre gives you additional info. Go find out which genre has the cheapest games!</div>
       </div>
       <div class="step" data-step="2">
-        <p>STEP 2</p>
+        <p>Adventure Games</p>
+        <div class="inner-step">Adventure Games have the steepest correlation between rating and time to beat. The trendline is so steep that it goes beyond 100% for long games.<br>
+        Hover over the data points. Can you find a game you already know?</div>
       </div>
       <div class="step" data-step="3">
-        <p>STEP 3</p>
+        <p>Racing Games</p>
+        <div class="inner-step">Racing game players do not seem to care about the length of their games.</div>
       </div>
       <div class="step" data-step="4">
-        <p>STEP 4</p>
+        <p>Sports</p>
+        <div class="inner-step">This time, sports games are the outlier. For all other genres, the trend was between neutral and positive. However for sports games, it seems that the longer the main story is, the worse of a reception it gets.</div>
+      </div>
+      <div class="step" data-step="5">
+        <p>All Games</p>
+        <div class="inner-step">Genre selection is now unlocked. You can filter by genre by clicking on the legend on the right.</div>
+      </div>
+      <div class="step" data-step="6">
+        <p>Price</p>
+        <div class="inner-step">Cheaper games tend to be shorter with one exception...</div>
+      </div>
+      <div class="step" data-step="7">
+        <p>MMO Prices</p>
+        <div class="inner-step">...MMOs tend to be longer the cheaper they are. Probably because free MMOs tend to use every trick imaginable to keep users engaged and are made longer by adding meaningless content.</div>
+      </div>
+      <div class="step" data-step="8">
+        <p>Feel free to explore</p>
+        <div class="inner-step">You can now freely change the x or y axis and filter for specific games.</div>
       </div>
     </article>
   </section>
@@ -270,7 +300,7 @@
   <section id="outro"></section>
 </main>
 
-<script src="../lib/scrollama.min.js"></script>
+<script src="lib/scrollama.min.js"></script>
 <script src='lib/d3/d3.js'></script>
 <script type = "module" src='src/scatterplot.js'></script>
 
