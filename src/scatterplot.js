@@ -65,8 +65,6 @@ function handleStepEnter(response) {
             }
             selectGenre("Sports");
             legendAllGames.on('click', null);
-            XSelect.value = "main_70_noise";
-            XSelect.dispatchEvent(new Event('change'));
             YSelect.value = "score";
             YSelect.dispatchEvent(new Event('change'));
             break;
@@ -84,25 +82,9 @@ function handleStepEnter(response) {
             })
             YSelect.disabled = true;
             XSelect.disabled = false;
-            XSelect.value = "bonus_content_250_noise";
-            XSelect.dispatchEvent(new Event('change'));
             YSelect.value = "score";
             YSelect.dispatchEvent(new Event('change'));
             break;
-        // case 5:
-        //     //bonus content
-        //     svgAllGames.attr("display", "block");
-        //     svgGenres.attr("display", "none");
-        //     if (currentGenre !== ""){
-        //         selectGenre(currentGenre);
-        //     }
-        //     YSelect.disabled = true;
-        //     XSelect.disabled = false;
-        //     XSelect.value = "bonus_content_250_noise";
-        //     XSelect.dispatchEvent(new Event('change'));
-        //     YSelect.value = "score";
-        //     YSelect.dispatchEvent(new Event('change'));
-        //     break;
         case 5:
             //Price
             svgAllGames.attr("display", "block");
@@ -112,8 +94,6 @@ function handleStepEnter(response) {
             }
             YSelect.disabled = false;
             XSelect.disabled = false;
-            XSelect.value = "bonus_content_250_noise";
-            XSelect.dispatchEvent(new Event('change'));
             YSelect.value = "initialprice";
             YSelect.dispatchEvent(new Event('change'));
             break;
@@ -127,8 +107,6 @@ function handleStepEnter(response) {
             selectGenre("MMO");
             YSelect.disabled = false;
             XSelect.disabled = false;
-            XSelect.value = "main_70_noise";
-            XSelect.dispatchEvent(new Event('change'));
             YSelect.value = "initialprice";
             YSelect.dispatchEvent(new Event('change'));
             break;
@@ -141,8 +119,6 @@ function handleStepEnter(response) {
             }
             YSelect.disabled = false;
             XSelect.disabled = false;
-            XSelect.value = "main_70_noise";
-            XSelect.dispatchEvent(new Event('change'));
             YSelect.value = "score";
             YSelect.dispatchEvent(new Event('change'));
             break;
