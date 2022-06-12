@@ -148,8 +148,8 @@ init();
 
 
 // create svg canvas
-const margin = {top: 10, right: 100, bottom: 10, left: 50};
-const width = window.innerWidth*0.9;
+const margin = {top: 10, right: 10, bottom: 10, left: 50};
+const width = window.innerWidth-300;
 const height = window.innerHeight*0.8;
 
 
@@ -376,8 +376,8 @@ function createLegend(legendDomain, data) {
         .attr("width", 20)
         .attr("height", 20)
         .attr("fill", d => colorScale(d))
-        .attr("stroke", "black")
-        .attr("stroke-width", "1")
+        // .attr("stroke", "black")
+        // .attr("stroke-width", "1")
         .attr("data-genre", d => d);
 
 
@@ -450,8 +450,8 @@ function createLegend(legendDomain, data) {
         .attr("width", 20)
         .attr("height", 20)
         .attr("fill", d => colorScale(d))
-        .attr("stroke", "black")
-        .attr("stroke-width", "1")
+        // .attr("stroke", "black")
+        // .attr("stroke-width", "1")
         .attr("data-genre", d => d);
 
 
@@ -542,7 +542,12 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
     })
         .on("mouseout", (event, d) => {
             tooltip.style("visibility", "hidden");
+        })
+        .on("click", (event, d) => {
+            let url = "https://store.steampowered.com/app/" + d.appid;
+            window.open(url, '_blank').focus();
         });
+    ;
 
 
     d3.select("#selectYButton").on("change", function (event, d) {
@@ -771,7 +776,6 @@ d3.csv("./data/genre_medians.csv").then(function(data) {
                 + `Main Story Time: ${Math.round(d.main_time * 100) / 100} hours<br/>`
                 + `Main Story+Extras Time: ${Math.round(d.main_extra_time * 100) / 100} hours<br/>`
                 + `100% Time: ${Math.round(d.completion_time * 100) / 100} hours<br/>`
-                + `Concurrent Users: ${Math.round(d.ccu * 100) / 100} players<br/>`
                 + `Score: ${Math.round(d.score * 100) / 100}%<br/>`);
     })
         .on("mouseout", (event, d) => {
@@ -857,9 +861,5 @@ function leastSquares(xSeries, ySeries) {
 }
 
 
-
-
-
-
-
-
+window.onresize = function(){ location.reload(); }
+history.scrollRestoration = 'manual';
