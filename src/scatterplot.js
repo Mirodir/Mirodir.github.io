@@ -8,21 +8,8 @@ let heightMod = 0.9;
 // initialize the scrollama
 var scroller = scrollama();
 
-function handleResize() {
-    var stepH = Math.floor(window.innerHeight * heightMod);
-    var figureHeight = window.innerHeight / 1.2;
-    var figureMarginTop = (window.innerHeight - figureHeight) / 5;
-
-    figure
-        .style("height", figureHeight + "px")
-        .style("top", figureMarginTop + "px");
-
-    scroller.resize();
-}
-
-// scrollama event handlers
+// scrollama event handlers for entering the different sections
 function handleStepEnter(response) {
-
     step.classed("is-active", function (d, i) {
         return i === response.index;
     });
@@ -75,7 +62,7 @@ function handleStepEnter(response) {
                 selectGenre(genre);
             })
             YSelect.disabled = true;
-            XSelect.disabled = false;
+            XSelect.disabled = true;
             YSelect.value = "score";
             YSelect.dispatchEvent(new Event('change'));
             break;
@@ -86,8 +73,8 @@ function handleStepEnter(response) {
             if (currentGenre !== ""){
                 selectGenre(currentGenre);
             }
-            YSelect.disabled = false;
-            XSelect.disabled = false;
+            YSelect.disabled = true;
+            XSelect.disabled = true;
             YSelect.value = "initialprice";
             YSelect.dispatchEvent(new Event('change'));
             break;
@@ -99,8 +86,9 @@ function handleStepEnter(response) {
                 selectGenre(currentGenre);
             }
             selectGenre("MMO");
-            YSelect.disabled = false;
-            XSelect.disabled = false;
+            YSelect.disabled = true;
+            XSelect.disabled = true;
+            gameSearch.disabled = true;
             YSelect.value = "initialprice";
             YSelect.dispatchEvent(new Event('change'));
             break;
@@ -130,7 +118,14 @@ function setupStickyfill() {
 
 function init() {
     setupStickyfill();
-    handleResize();
+    var figureHeight = window.innerHeight / 1.2;
+    var figureMarginTop = (window.innerHeight - figureHeight) / 5;
+
+    figure
+        .style("height", figureHeight + "px")
+        .style("top", figureMarginTop + "px");
+
+    scroller.resize();
     scroller
         .setup({
             step: "#scrolly article .step",
@@ -143,13 +138,11 @@ function init() {
 init();
 
 
-// create svg canvas
+// create svg canvases
 const margin = {top: 10, right: 100, bottom: 10, left: 50};
 const width = window.innerWidth*0.8;
 const height = window.innerHeight*0.9;
 
-
-// const canvHeight = 700, canvWidth = 1600;
 const svgAllGames = figure.append("svg")
     .attr("width", width*1.2)
     .attr("height", height)
@@ -160,7 +153,7 @@ const svgGenres = figure.append("svg")
     .attr("height", height)
     .attr("display", "block");
 
-
+//where x and y axis data is from and how to label it
 const xData = [
     {
         label:"Time to beat main game",
@@ -226,6 +219,8 @@ let legendAllGames;
 
 var data_points;
 
+
+//setup user controls
 let divUserControls = figure.append("div")
     .attr("id", "divUserControls");
 
@@ -253,8 +248,6 @@ divUserControls.append('input')
 let gameSearch = document.getElementById("filterGames");
 gameSearch.disabled = true;
 
-
-
 d3.select("#selectYButton")
     .selectAll('select')
     .data(yData)
@@ -262,8 +255,6 @@ d3.select("#selectYButton")
     .append('option')
     .text(function (d) { return d.label; })
     .attr("value", function (d) { return d.value; })
-
-
 
 d3.select("#selectXButton")
     .selectAll('select')
@@ -279,16 +270,7 @@ let XSelect = document.getElementById("selectXButton");
 YSelect.disabled = true;
 XSelect.disabled = true;
 
-// svg.append("text")
-//     .attr("y", 0)
-//     .attr("x", margin.left)
-//     .attr("dy", "1.5em")
-//     .attr("font-family", "sans-serif")
-//     .attr("font-size", "24px")
-//     .attr("text-type", "chart-title")
-//     .style("text-anchor", "left")
-//     .text("Games on Steam");
-
+//add elements for both charts
 const chartAreaAllGames = svgAllGames.append("g")
     .attr("id", "chart-area")
     .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
@@ -336,14 +318,14 @@ yAxisLabelGenres = chartAreaGenres.append("text")
     .style("text-anchor", "middle")
     .text("Review Rating, %");
 
+
+
 function selectGenre(genre){
+    //genre filter change function
     gameSearch.value='';
 
     let rects = legendAllGames.selectAll("rect.legend-item");
     let texts = legendAllGames.selectAll("text.legend-item");
-
-    console.log(rects);
-    console.log(data_points);
 
     if (genre === currentGenre){
         data_points.style("display", "block");
@@ -353,34 +335,18 @@ function selectGenre(genre){
     }
     else {
         rects.filter(function (d) {
-            // if (d.getAttributeNames.includes('data-genre')){
-            //     return false;
-            // }
-            console.log(d);
             return d === genre;
         }).style("opacity", "1");
 
         rects.filter(function (d) {
-            // if (d.getAttributeNames.includes('data-genre')){
-            //     return false;
-            // }
-
             return d !== genre;
         }).style("opacity", "0.5");
 
         texts.filter(function (d) {
-            // if (d.getAttributeNames.includes('data-genre')){
-            //     return false;
-            // }
-
             return d === genre;
         }).style("opacity", "1");
 
         texts.filter(function (d) {
-            // if (d.getAttributeNames.includes('data-genre')){
-            //     return false;
-            // }
-
             return d !== genre;
         }).style("opacity", "0.5");
 
@@ -422,6 +388,7 @@ function selectGenre(genre){
 
 
 function createLegend(legendDomain, data) {
+    //first time setup of legend
     legendAllGames = svgAllGames.append("g")
         .attr("id", "legend")
         .attr("transform", "translate(" + (width-30) + "," + 20 + ")");
@@ -600,12 +567,7 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
         setTimeout(function (){
 
 
-            console.log("--------------------")
-            console.log(document.getElementById("tooltip-games").clientHeight)
-            console.log(e.clientY)
-            console.log(window.innerHeight)
             if (document.getElementById("tooltip-games").clientHeight > window.innerHeight - e.clientY){
-                console.log("move tooltip");
                 pos[1] -= document.getElementById("tooltip-games").clientHeight - (window.innerHeight-e.clientY);
             }
 
@@ -778,8 +740,6 @@ d3.csv("./data/all_steam_games_with_time_data_prepared_for_vis.csv").then(functi
 
 
 d3.csv("./data/genre_medians.csv").then(function(data) {
-    // let xDomain = d3.extent(data, d => Number(d.main_50));
-    // let yDomain = d3.extent(data, d => Number(d.score));
 
     let xScale = d3.scaleLinear()
         .domain([0, 71])
@@ -831,7 +791,6 @@ d3.csv("./data/genre_medians.csv").then(function(data) {
     var tooltip = d3.select("body").append("div").classed("tooltip", true).attr("id", "tooltip-genre");
     chartAreaGenres.selectAll("circle").on("mouseover", (event, d) => {
         var pos = d3.pointer(event, d);
-        console.log(pos);
         if (event.target.height + pos[1] > window.innerHeight){
             pos[1]-= (event.target.height + pos[1]) - window.innerHeight;
         }
@@ -928,5 +887,11 @@ function leastSquares(xSeries, ySeries) {
     return [slope, intercept, rSquare];
 }
 
-window.onresize = function(){ location.reload(); }
+//reload when being resized
+window.onresize = function(){
+    setTimeout(()=>{
+        window.location.reload(true);
+    }); }
+
+//start at the top of website upon reload
 history.scrollRestoration = 'manual';

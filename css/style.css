@@ -1,35 +1,49 @@
-/*div.tooltip {*/
-/*    position: absolute;*/
-/*    text-align: left;*/
-/*    width: 300px;*/
-/*    height: 500px;*/
-/*    padding: 2px;*/
-/*    font: 12px sans-serif;*/
-/*    background: lightsteelblue;*/
-/*    border: 0px;*/
-/*    border-radius: 8px;*/
-/*    pointer-events: none;*/
-/*    visibility: hidden;*/
-/*}*/
-/*.svg-content-responsive {*/
-/*    display: inline-block;*/
-/*    position: absolute;*/
-/*    top: 10px;*/
-/*    left: 0;*/
-/*}*/
+.body {
+    overflow-x: hidden;
+}
 
+.tooltip-text {
+    padding: 0.5rem;
+    font: 15px sans-serif;
+    line-height: 1.3;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    width: 300px;
+    background: rgba(211, 211, 211, 0.9);
+    border: 2px solid goldenrod;
+    border-radius: 8px;
+    pointer-events: none;
+    display: none;
+    overflow: hidden;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+img.tooltip-image {
+    width: 100%;
+    margin-bottom: -6px;
+}
 
 #scrolly {
     position: relative;
-    background-color: #f3f3f3;
+    background-color: #ffffff;
     padding: 1rem;
 }
 
 article {
     position: relative;
     padding: 0;
-    max-width: 20rem;
+    max-width: 52vw;
     margin: 0 auto;
+    pointer-events: none;
 }
 
 figure {
@@ -41,7 +55,6 @@ figure {
     -webkit-transform: translate3d(0, 0, 0);
     -moz-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
-    background-color: #8a8a8a;
     z-index: 0;
 }
 
@@ -59,10 +72,11 @@ figure p {
     color: #fff;
 }
 
-.step {
-    margin: 0 auto 110vh auto;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.1);
+
+.step p{
+    padding: 1rem;
+    background-color: rgba(105, 105, 105, 0.5);
+    color: white;
 }
 
 .step:last-child {
@@ -70,16 +84,23 @@ figure p {
 }
 
 .step.is-active p {
-    background-color: goldenrod;
-    color: #3b3b3b;
+    background-color: rgb(218, 165, 32, 0.5);
+    color: rgb(59, 59, 59);
 }
 
-.step p {
+.step {
+    margin: 0 auto 110vh auto;
+    color: rgb(59, 59, 59);
     text-align: center;
-    padding: 1rem;
     font-size: 1.5rem;
-    background-color: #3b3b3b;
+    background-color: rgba(0,0,0,0.1);
+    pointer-events: auto;
 }
+
+.step > * {
+    padding: 1em;
+}
+
 
 * {
     box-sizing: border-box;
@@ -151,9 +172,24 @@ nav {
 }
 
 #intro {
-    max-width: 40rem;
+    max-width: 80vw;
     margin: 1rem auto;
+    margin-bottom: 5rem;
     text-align: center;
+}
+
+#divUserControls > * > * {
+    padding: 0 0.5rem 0 0.5rem;
+}
+
+#divUserControls > * {
+    padding: 0 0.5rem 0 0.5rem;
+}
+
+#divUserControls {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
 }
 
 .intro__hed {
@@ -194,14 +230,6 @@ nav {
     .github-corner .octo-arm {
         animation: octocat-wave 560ms ease-in-out;
     }
-}
-
-#intro {
-    margin-bottom: 320px;
-}
-
-#outro {
-    height: 640px;
 }
 
 @media (min-width: 840px) {
