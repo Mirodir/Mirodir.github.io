@@ -1,243 +1,240 @@
-/*Had some issues getting this to work on the server so I just hardcoded it into the index.html.*/
+.body {
+    overflow-x: hidden;
+}
+
+.tooltip-text {
+    padding: 0.5rem;
+    font: 15px sans-serif;
+    line-height: 1.3;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    width: 300px;
+    background: rgba(211, 211, 211, 0.9);
+    border: 2px solid goldenrod;
+    border-radius: 8px;
+    pointer-events: none;
+    display: none;
+    overflow: hidden;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+img.tooltip-image {
+    width: 100%;
+    margin-bottom: -6px;
+}
+
+#scrolly {
+    position: relative;
+    background-color: #ffffff;
+    padding: 1rem;
+}
+
+article {
+    position: relative;
+    padding: 0;
+    max-width: 52vw;
+    margin: 0 auto;
+    pointer-events: none;
+}
+
+figure {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 0;
+}
+
+figure p {
+    text-align: center;
+    padding: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    font-weight: 900;
+    color: #fff;
+}
 
 
-/*.body {*/
-/*    overflow-x: hidden;*/
-/*}*/
+.step p{
+    padding: 1rem;
+    background-color: rgba(105, 105, 105, 0.5);
+    color: white;
+}
 
-/*.tooltip-text {*/
-/*    padding: 0.5rem;*/
-/*    font: 15px sans-serif;*/
-/*    line-height: 1.3;*/
-/*}*/
+.step:last-child {
+    margin-bottom: 0;
+}
 
-/*div.tooltip {*/
-/*    position: absolute;*/
-/*    text-align: left;*/
-/*    width: 300px;*/
-/*    background: rgba(211, 211, 211, 0.9);*/
-/*    border: 2px solid goldenrod;*/
-/*    border-radius: 8px;*/
-/*    pointer-events: none;*/
-/*    display: none;*/
-/*    overflow: hidden;*/
-/*}*/
+.step.is-active p {
+    background-color: rgb(218, 165, 32, 0.5);
+    color: rgb(59, 59, 59);
+}
 
-/*.svg-content-responsive {*/
-/*    display: inline-block;*/
-/*    position: absolute;*/
-/*    top: 10px;*/
-/*    left: 0;*/
-/*}*/
+.step {
+    margin: 0 auto 110vh auto;
+    color: rgb(59, 59, 59);
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: rgba(0,0,0,0.1);
+    pointer-events: auto;
+}
 
-/*img.tooltip-image {*/
-/*    width: 100%;*/
-/*    margin-bottom: -6px;*/
-/*}*/
-
-/*#scrolly {*/
-/*    position: relative;*/
-/*    background-color: #ffffff;*/
-/*    padding: 1rem;*/
-/*}*/
-
-/*article {*/
-/*    position: relative;*/
-/*    padding: 0;*/
-/*    max-width: 52vw;*/
-/*    margin: 0 auto;*/
-/*    pointer-events: none;*/
-/*}*/
-
-/*figure {*/
-/*    position: -webkit-sticky;*/
-/*    position: sticky;*/
-/*    left: 0;*/
-/*    width: 100%;*/
-/*    margin: 0;*/
-/*    -webkit-transform: translate3d(0, 0, 0);*/
-/*    -moz-transform: translate3d(0, 0, 0);*/
-/*    transform: translate3d(0, 0, 0);*/
-/*    z-index: 0;*/
-/*}*/
-
-/*figure p {*/
-/*    text-align: center;*/
-/*    padding: 1rem;*/
-/*    position: absolute;*/
-/*    top: 50%;*/
-/*    left: 50%;*/
-/*    -moz-transform: translate(-50%, -50%);*/
-/*    -webkit-transform: translate(-50%, -50%);*/
-/*    transform: translate(-50%, -50%);*/
-/*    font-size: 8rem;*/
-/*    font-weight: 900;*/
-/*    color: #fff;*/
-/*}*/
+.step > * {
+    padding: 1em;
+}
 
 
-/*.step p{*/
-/*    padding: 1rem;*/
-/*    background-color: rgba(105, 105, 105, 0.5);*/
-/*    color: white;*/
-/*}*/
+* {
+    box-sizing: border-box;
+}
 
-/*.step:last-child {*/
-/*    margin-bottom: 0;*/
-/*}*/
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
 
-/*.step.is-active p {*/
-/*    background-color: rgb(218, 165, 32, 0.5);*/
-/*    color: rgb(59, 59, 59);*/
-/*}*/
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    min-height: 1280px;
+    color: #3b3b3b;
+    font-size: 24px;
+}
 
-/*.step {*/
-/*    margin: 0 auto 110vh auto;*/
-/*    color: rgb(59, 59, 59);*/
-/*    text-align: center;*/
-/*    font-size: 1.5rem;*/
-/*    background-color: rgba(0,0,0,0.1);*/
-/*    pointer-events: auto;*/
-/*}*/
+p,
+h1,
+h2,
+h3,
+h4,
+a {
+    margin: 0;
+    font-weight: 400;
+}
 
-/*.step > * {*/
-/*    padding: 1em;*/
-/*}*/
+a,
+a:visited,
+a:hover {
+    color: teal;
+    text-decoration: none;
+    border-bottom: 2px solid currentColor;
+}
 
+nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: baseline;
+    -ms-flex-align: baseline;
+    align-items: baseline;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    background: #f3f3f3;
+    padding: 1rem;
+    padding-right: 5rem;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
 
-/** {*/
-/*    box-sizing: border-box;*/
-/*}*/
+.nav__examples {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: baseline;
+    -ms-flex-align: baseline;
+    align-items: baseline;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
 
-/*html,*/
-/*body {*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*}*/
+.nav__examples > * {
+    margin-right: 0.5rem;
+}
 
-/*body {*/
-/*    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,*/
-/*    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;*/
-/*    min-height: 1280px;*/
-/*    color: #3b3b3b;*/
-/*    font-size: 24px;*/
-/*}*/
+#intro {
+    max-width: 80vw;
+    margin: 1rem auto;
+    margin-bottom: 5rem;
+    text-align: center;
+}
 
-/*p,*/
-/*h1,*/
-/*h2,*/
-/*h3,*/
-/*h4,*/
-/*a {*/
-/*    margin: 0;*/
-/*    font-weight: 400;*/
-/*}*/
+#divUserControls > * > * {
+    padding: 0 0.5rem 0 0.5rem;
+}
 
-/*a,*/
-/*a:visited,*/
-/*a:hover {*/
-/*    color: teal;*/
-/*    text-decoration: none;*/
-/*    border-bottom: 2px solid currentColor;*/
-/*}*/
+#divUserControls > * {
+    padding: 0 0.5rem 0 0.5rem;
+}
 
-/*nav {*/
-/*    display: -webkit-box;*/
-/*    display: -ms-flexbox;*/
-/*    display: flex;*/
-/*    -webkit-box-align: baseline;*/
-/*    -ms-flex-align: baseline;*/
-/*    align-items: baseline;*/
-/*    -webkit-box-pack: justify;*/
-/*    -ms-flex-pack: justify;*/
-/*    justify-content: space-between;*/
-/*    background: #f3f3f3;*/
-/*    padding: 1rem;*/
-/*    padding-right: 5rem;*/
-/*    -ms-flex-wrap: wrap;*/
-/*    flex-wrap: wrap;*/
-/*}*/
+#divUserControls {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
 
-/*.nav__examples {*/
-/*    display: -webkit-box;*/
-/*    display: -ms-flexbox;*/
-/*    display: flex;*/
-/*    -webkit-box-align: baseline;*/
-/*    -ms-flex-align: baseline;*/
-/*    align-items: baseline;*/
-/*    -ms-flex-wrap: wrap;*/
-/*    flex-wrap: wrap;*/
-/*    margin-top: 1rem;*/
-/*}*/
+.intro__hed {
+    font-size: 2em;
+    margin: 2rem auto 0.5rem auto;
+}
 
-/*.nav__examples > * {*/
-/*    margin-right: 0.5rem;*/
-/*}*/
+.intro__dek {
+    color: #8a8a8a;
+}
 
-/*#intro {*/
-/*    max-width: 80vw;*/
-/*    margin: 1rem auto;*/
-/*    margin-bottom: 5rem;*/
-/*    text-align: center;*/
-/*}*/
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+}
 
-/*#divUserControls > * > * {*/
-/*    padding: 0 0.5rem 0 0.5rem;*/
-/*}*/
+@keyframes octocat-wave {
+    0%,
+    100% {
+        transform: rotate(0);
+    }
 
-/*#divUserControls > * {*/
-/*    padding: 0 0.5rem 0 0.5rem;*/
-/*}*/
+    20%,
+    60% {
+        transform: rotate(-25deg);
+    }
 
-/*#divUserControls {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    justify-content: right;*/
-/*}*/
+    40%,
+    80% {
+        transform: rotate(10deg);
+    }
+}
 
-/*.intro__hed {*/
-/*    font-size: 2em;*/
-/*    margin: 2rem auto 0.5rem auto;*/
-/*}*/
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none;
+    }
 
-/*.intro__dek {*/
-/*    color: #8a8a8a;*/
-/*}*/
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+}
 
-/*.github-corner:hover .octo-arm {*/
-/*    animation: octocat-wave 560ms ease-in-out;*/
-/*}*/
-
-/*@keyframes octocat-wave {*/
-/*    0%,*/
-/*    100% {*/
-/*        transform: rotate(0);*/
-/*    }*/
-
-/*    20%,*/
-/*    60% {*/
-/*        transform: rotate(-25deg);*/
-/*    }*/
-
-/*    40%,*/
-/*    80% {*/
-/*        transform: rotate(10deg);*/
-/*    }*/
-/*}*/
-
-/*@media (max-width: 500px) {*/
-/*    .github-corner:hover .octo-arm {*/
-/*        animation: none;*/
-/*    }*/
-
-/*    .github-corner .octo-arm {*/
-/*        animation: octocat-wave 560ms ease-in-out;*/
-/*    }*/
-/*}*/
-
-/*@media (min-width: 840px) {*/
-/*    .nav__examples {*/
-/*        margin-top: 0;*/
-/*        margin-left: 2rem;*/
-/*    }*/
-/*}*/
+@media (min-width: 840px) {
+    .nav__examples {
+        margin-top: 0;
+        margin-left: 2rem;
+    }
+}
